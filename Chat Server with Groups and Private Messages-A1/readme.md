@@ -57,7 +57,7 @@ make
 ```
 
 **Run the Server Executable:**  
-   - On **Linux**
+   - On **Linux** :
      ```bash
      ./server_file
      ```
@@ -69,13 +69,9 @@ make
 - In the integrated terminal panel in VS Code, click the plus sign (+) to open a new terminal tab.
 
 2. **Run the Client Executable:**  
-- On **Linux/macOS** (or in Git Bash on Windows), type:
+- On **Linux** :
   ```bash
   ./client_grp
-  ```
-- On **Windows Command Prompt or PowerShell**, type:
-  ```powershell
-  .\client_grp.exe
   ```
 
 **Authentication:**  
