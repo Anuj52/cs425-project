@@ -54,3 +54,57 @@ Run the following command in the project directory:
 
 ```bash
 make
+```
+
+**Run the Server Executable:**  
+   - On **Linux**
+     ```bash
+     ./server_file
+     ```
+     
+
+### 2. Start a Client
+
+1. **Open a New Terminal Tab:**  
+- In the integrated terminal panel in VS Code, click the plus sign (+) to open a new terminal tab.
+
+2. **Run the Client Executable:**  
+- On **Linux/macOS** (or in Git Bash on Windows), type:
+  ```bash
+  ./client_grp
+  ```
+- On **Windows Command Prompt or PowerShell**, type:
+  ```powershell
+  .\client_grp.exe
+  ```
+
+**Authentication:**  
+- The client will prompt for a username and password.
+- Enter a valid username and password combination (for example, if your `user.txt` contains `alice:password123`, use those credentials).
+
+Running Additional Clients
+
+To simulate multiple users (which is useful for testing private messaging, group messaging, etc.):
+
+2. **Run the Client Executable in Each Tab:**  
+- Follow the same steps as above:
+  - Linux/macOS: `./client_grp`
+- Log in with different valid credentials (e.g., one client as `alice`, another as `bob`, etc.).
+
+Now you can test commands such as:
+- **Private Messaging:** `/msg bob Hello Bob!`
+- **Broadcast Messaging:** `/broadcast Good morning everyone!`
+- **Group Commands:** Create, join, leave, and send group messages using the corresponding commands.
+
+### Example Terminal Output
+
+- **Server Terminal:**
+Server is listening on port 8080
+
+
+- **Client Terminal (Alice):**
+Connected to the server. Enter username: alice Enter password: password123 Welcome to the chat server!
+
+
+- **Client Terminal (Bob):**
+Connected to the server. Enter username: bob Enter password: qwerty456 alice has joined the chat. Welcome to the chat server!
