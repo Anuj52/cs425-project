@@ -1,6 +1,6 @@
 # Chat Application
 
-This is a multi-client chat application implemented in C++ using sockets and threads. The chat server supports various commands for private messaging, broadcast messaging, group management, and group messaging. User credentials are stored in a `user.txt` file.
+This is a multi-client chat application implemented in C++ using sockets and threads. The chat server supports various commands for private messaging, broadcast messaging, group management, and group messaging. User credentials are stored in a `users.txt` file.
 
 ## Features
 
