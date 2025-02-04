@@ -36,7 +36,7 @@ This is a multi-client chat application implemented in C++ using sockets and thr
 - **server_file.cpp:** The server implementation.
 - **client_grp.cpp:** The client implementation.
 - **user.txt:** A text file containing valid user credentials in the format `username:password` (one per line).
-- **Makefile:** (Optional) A Makefile to compile the project easily.
+- **Makefile:** A Makefile to compile the project easily.
 
 ## Requirements
 

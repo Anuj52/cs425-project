@@ -48,25 +48,25 @@ int main() {
 
     std::cout << "Connected to the server." << std::endl;
 
-    // Authentication process.
+    //Authentication process.
     std::string username, password;
     char buffer[BUFFER_SIZE];
 
-    // Receive username prompt from server.
+    //Receive username from server.
     memset(buffer, 0, BUFFER_SIZE);
     recv(client_socket, buffer, BUFFER_SIZE, 0);
     std::cout << buffer;
     std::getline(std::cin, username);
     send(client_socket, username.c_str(), username.size(), 0);
 
-    // Receive password prompt from server.
+    //Receive password from server.
     memset(buffer, 0, BUFFER_SIZE);
     recv(client_socket, buffer, BUFFER_SIZE, 0);
     std::cout << buffer;
     std::getline(std::cin, password);
     send(client_socket, password.c_str(), password.size(), 0);
 
-    // Receive authentication result from server.
+    //Receive authentication result from server.
     memset(buffer, 0, BUFFER_SIZE);
     recv(client_socket, buffer, BUFFER_SIZE, 0);
     std::cout << buffer << std::endl;
@@ -75,12 +75,12 @@ int main() {
         return 1;
     }
 
-    // Start a thread to handle incoming messages from the server.
+    //Start a thread to handle incoming messages from the server.
     std::thread receive_thread(handle_server_messages, client_socket);
     receive_thread.detach();
 
-    // Main loop: read user input and send it to the server.
-    while (true) {
+    //read user input and send it to the server.
+    while(true){
         std::string message;
         std::getline(std::cin, message);
         if (message.empty())

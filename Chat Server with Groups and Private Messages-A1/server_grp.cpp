@@ -23,13 +23,12 @@ std::mutex groups_mutex;
 
 // Global data structures.
 std::unordered_map<int, std::string>
-    clients;  // Maps client sockets to usernames.
+    clients;
 std::unordered_map<std::string, std::string>
-    users;  // Stores username:password pairs.
+    users;
 std::unordered_map<std::string, std::unordered_set<int>>
-    groups;  // Maps group names to sets of client sockets (members).
+    groups;
 
-// Utility function to trim whitespace from both ends of a string.
 std::string trim(const std::string &s) {
   size_t start = s.find_first_not_of(" \n\r\t");
   size_t end = s.find_last_not_of(" \n\r\t");
@@ -37,8 +36,6 @@ std::string trim(const std::string &s) {
   return s.substr(start, end - start + 1);
 }
 
-// Loads user credentials from a file (each line formatted as
-// username:password).
 void load_users(const std::string &filename) {
   std::ifstream infile(filename);
   if (!infile.is_open()) {
@@ -62,7 +59,7 @@ void load_users(const std::string &filename) {
 void handle_client(int client_socket) {
   char buffer[BUFFER_SIZE];
 
-  // --- Authentication ---
+  //Authentication
   std::string username_prompt = "Enter username: ";
   send(client_socket, username_prompt.c_str(), username_prompt.size(), 0);
   memset(buffer, 0, BUFFER_SIZE);
@@ -96,13 +93,13 @@ void handle_client(int client_socket) {
     return;
   }
 
-  // Add client to active list.
+  //Add client to active list.
   {
     std::lock_guard<std::mutex> lock(clients_mutex);
     clients[client_socket] = username;
   }
 
-  // Notify other clients that a new user has joined.
+  //Notify other clients that a new user has joined.
   std::string join_msg = username + " has joined the chat.\n";
   {
     std::lock_guard<std::mutex> lock(clients_mutex);
@@ -114,8 +111,6 @@ void handle_client(int client_socket) {
 
   std::string welcome = "Welcome to the chat server!\n";
   send(client_socket, welcome.c_str(), welcome.size(), 0);
-
-  // --- Main command-processing loop ---
   while (true) {
     memset(buffer, 0, BUFFER_SIZE);
     bytes_received = recv(client_socket, buffer, BUFFER_SIZE, 0);
@@ -125,7 +120,7 @@ void handle_client(int client_socket) {
     msg = trim(msg);
     if (msg.empty()) continue;
 
-    // 1. Private Message: /msg <username> <message>
+    //Private Message: /msg <username> <message>
     if (msg.rfind("/msg ", 0) == 0) {
       size_t first_space = msg.find(' ');
       size_t second_space = msg.find(' ', first_space + 1);
@@ -159,7 +154,7 @@ void handle_client(int client_socket) {
         }
       }
     }
-    // 2. Broadcast Message: /broadcast <message>
+    //Broadcast Message: /broadcast <message>
     else if (msg.rfind("/broadcast ", 0) == 0) {
       std::string message_text = msg.substr(strlen("/broadcast "));
       std::string sender = clients[client_socket];
@@ -173,7 +168,7 @@ void handle_client(int client_socket) {
         }
       }
     }
-    // 3. Create Group: /create group <group name>
+    //Create Group: /create group <group name>
     else if (msg.rfind("/create group ", 0) == 0) {
       std::string group_name = trim(msg.substr(strlen("/create group ")));
       if (group_name.empty()) {
@@ -186,7 +181,7 @@ void handle_client(int client_socket) {
           std::string error = "Group '" + group_name + "' already exists.\n";
           send(client_socket, error.c_str(), error.size(), 0);
         } else {
-          // Create the group and add the client as the first member.
+          //Create the group and add the client as the first member.
           groups[group_name] = std::unordered_set<int>();
           groups[group_name].insert(client_socket);
           std::string info =
@@ -195,7 +190,7 @@ void handle_client(int client_socket) {
         }
       }
     }
-    // 4. Join Group: /join group <group name>
+    //Join Group: /join group <group name>
     else if (msg.rfind("/join group ", 0) == 0) {
       std::string group_name = trim(msg.substr(strlen("/join group ")));
       if (group_name.empty()) {
@@ -214,7 +209,7 @@ void handle_client(int client_socket) {
         }
       }
     }
-    // 5. Leave Group: /leave group <group name>
+    //Leave Group: /leave group <group name>
     else if (msg.rfind("/leave group ", 0) == 0) {
       std::string group_name = trim(msg.substr(strlen("/leave group ")));
       if (group_name.empty()) {
@@ -240,10 +235,8 @@ void handle_client(int client_socket) {
         }
       }
     }
-    // 6. Group Message: /group msg <group name> <message>
+    //Group Message: /group msg <group name> <message>
     else if (msg.rfind("/group msg ", 0) == 0) {
-      // Find the first space after the command prefix to separate group name
-      // from message.
       size_t pos = msg.find(' ', strlen("/group msg "));
       if (pos == std::string::npos) {
         std::string error =
@@ -266,7 +259,7 @@ void handle_client(int client_socket) {
           std::string sender = clients[client_socket];
           std::string full_message = "[group " + group_name + "] " + sender +
                                      ": " + group_message + "\n";
-          // Send the message to every group member except the sender.
+          //Send the message to every group member except the sender.
           for (int sock : groups[group_name]) {
             if (sock != client_socket) {
               send(sock, full_message.c_str(), full_message.size(), 0);
@@ -276,14 +269,14 @@ void handle_client(int client_socket) {
       }
     }
 
-    // Unknown command.
+    //Unknown command.
     else {
       std::string error = "Unknown command.\n";
       send(client_socket, error.c_str(), error.size(), 0);
     }
   }
 
-  // --- Client Disconnecting ---
+  //Client Disconnecting
   std::string left_username;
   {
     std::lock_guard<std::mutex> lock(clients_mutex);
@@ -336,7 +329,6 @@ void start_server(int port) {
 }
 
 int main() {
-  // Load user credentials from "user.txt"
   load_users("users.txt");
 
   int port = 8080;
