@@ -40,20 +40,20 @@ The goal is to simulate this handshake manually using raw packets with the follo
 ### 🧪 Build
 
 ```bash
-make
-
+make 
+```
 ## 🚀 Run
 
 To start the server :
 
 ```bash
 sudo make run-server
-
+```
 To start the client:
 
 ```bash
 sudo make run-client
-
+```
 ## 🛠️ Implementation Details
 Raw Sockets: Used to bypass the OS TCP stack and manually construct TCP/IP headers.
 Hardcoded Values: Sequence and acknowledgment numbers are hardcoded for simplicity.
